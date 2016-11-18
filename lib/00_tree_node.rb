@@ -11,9 +11,7 @@ class PolyTreeNode
   end
 
   def parent=(new_parent)
-    unless parent.nil?
-      self.parent.children.reject! { |node| node == self }
-    end
+    self.parent.children.reject! { |node| node == self } if parent
 
     @parent = new_parent
     new_parent.children << self unless new_parent.nil? ||
@@ -21,13 +19,11 @@ class PolyTreeNode
   end
 
   def add_child(child_node)
-    @children.unshift(child_node)
     child_node.parent = self
   end
 
   def remove_child(child_node)
     raise "This is not a child" if child_node.parent.nil?
-    @children.shift
     child_node.parent = nil
   end
 
