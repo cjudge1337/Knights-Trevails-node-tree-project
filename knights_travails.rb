@@ -5,12 +5,12 @@ class KnightPathFinder
   DELTAS = [[2, 1], [2, -1], [-2, 1], [-2, -1],
             [1, 2], [1, -2], [-1, 2], [-1, -2]].freeze
 
+  attr_accessor :start_pos, :visited_positions, :move_tree
+
   def initialize(start_pos)
     @start_pos = start_pos
-debugger
-
-    @move_tree = build_move_tree
     @visited_positions = [start_pos]
+    @move_tree = build_move_tree
   end
 
   def [](pos)
@@ -24,18 +24,17 @@ debugger
   end
 
   def build_move_tree
-    queue = [PolyTreeNode.new(@start_pos)]
-    move_tree = []
+    root = PolyTreeNode.new(@start_pos)
+    queue = [root]
 
     until queue.empty?
       node = queue.shift
-      move_tree << node
       node_moves = new_move_positions(node.value)
-      node_moves.each { |move| node.add_child(PolyTreeNode(move)) }
+      node_moves.each { |move| node.add_child(PolyTreeNode.new(move)) }
       queue += node.children
     end
 
-    move_tree
+    root
   end
 
   def self.valid_moves(pos)
@@ -53,10 +52,11 @@ debugger
     path_finder = KnightPathFinder.valid_moves(pos)
 
     new_moves = path_finder.reject do |move|
+#debugger
       @visited_positions.include?(move)
     end
     new_moves = new_moves.select do |move|
-      move[0].between?(0..7) && move[1].between?(0..7)
+      move[0].between?(0, 7) && move[1].between?(0, 7)
     end
 
     new_moves.each { |move| @visited_positions << move }
