@@ -1,4 +1,5 @@
 require_relative 'lib/00_tree_node.rb'
+require 'byebug'
 
 class KnightPathFinder
   DELTAS = [[2, 1], [2, -1], [-2, 1], [-2, -1],
@@ -6,6 +7,8 @@ class KnightPathFinder
 
   def initialize(start_pos)
     @start_pos = start_pos
+debugger
+
     @move_tree = build_move_tree
     @visited_positions = [start_pos]
   end
@@ -22,15 +25,17 @@ class KnightPathFinder
 
   def build_move_tree
     queue = [PolyTreeNode.new(@start_pos)]
+    move_tree = []
 
     until queue.empty?
       node = queue.shift
-      new_move_positions(node).each do |move|
-        queue += move
-      end
+      move_tree << node
+      node_moves = new_move_positions(node.value)
+      node_moves.each { |move| node.add_child(PolyTreeNode(move)) }
+      queue += node.children
     end
 
-    queue
+    move_tree
   end
 
   def self.valid_moves(pos)
@@ -49,6 +54,9 @@ class KnightPathFinder
 
     new_moves = path_finder.reject do |move|
       @visited_positions.include?(move)
+    end
+    new_moves = new_moves.select do |move|
+      move[0].between?(0..7) && move[1].between?(0..7)
     end
 
     new_moves.each { |move| @visited_positions << move }
