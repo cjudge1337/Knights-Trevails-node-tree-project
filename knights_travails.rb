@@ -67,12 +67,17 @@ class KnightPathFinder
     # You should use either your dfs or bfs methods from the PolyTreeNode exercises
     # This will return a tree node which is the final destination.
     # Use #trace_path_back to finish up #find_path
+
+    move_tree.dfs(end_pos)
   end
 
   def trace_path_back
     # This should trace back from the node to the root using PolyTreeNode#parent
     # As it goes up-and-up toward the root, it should add each value to an array
     # trace_path_back should return the values in order from the target node up to the root
+    trace_path = []
+
+    
   end
 
 
